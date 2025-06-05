@@ -2,6 +2,8 @@
 
 A few commands and utilities for S1 mod testing.
 
+![icon](https://raw.githubusercontent.com/k073l/s1-toolbox/master/assets/icon.png)
+
 ## Features
 - `fly` command - better freecam, will teleport you to the position you were at when you disable it by running it again
 - `pos` command - prints your current position in console and in GUI
