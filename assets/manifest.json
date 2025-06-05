@@ -1,0 +1,10 @@
+{
+    "name": "ScheduleToolbox",
+    "version_number": "1.0.0",
+    "website_url": "",
+    "description": "Testing tools for Schedule I",
+    "dependencies": [
+        "LavaGang-MelonLoader-0.7.0",
+        "the_croods-SwapperPlugin-1.2.1"
+    ]
+}
