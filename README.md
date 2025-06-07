@@ -21,6 +21,8 @@ A few commands and utilities for S1 mod testing.
 
 `tp 100 100` - will teleport you to the ground position with coordinates (100, 100)
 
+- `timewarp` command - allows you to temporarily speed up the game time, useful for testing things that take a long time to happen
+
 - In-game help for added commands (accessed by commands button, below console switch)
 - Disclaimer screen skip - faster game startup
 - Hold-to-load - hold the number key button to load the game in that slot

@@ -28,7 +28,7 @@ public static class BuildInfo
     public const string Name = "ScheduleToolbox";
     public const string Description = "Testing tools for Schedule I";
     public const string Author = "k073l";
-    public const string Version = "1.0.0";
+    public const string Version = "1.1.0";
 }
 
 public class ScheduleToolbox : MelonMod
@@ -45,6 +45,7 @@ public class ScheduleToolbox : MelonMod
         { KeyCode.Alpha5, 0f },
     };
     private bool _shouldResetTimers = false;
+    private bool _addedCommands = false;
     
     public override void OnInitializeMelon()
     {
@@ -106,13 +107,19 @@ public class ScheduleToolbox : MelonMod
     
     private IEnumerator ConsoleCoro()
     {
+        if (_addedCommands)
+        {
+            Logger.Msg("Console commands already added, skipping.");
+            yield break;
+        }
         yield return new WaitForSeconds(1f);
         var commands = new List<Console.ConsoleCommand>
         {
             new FlyCommand(),
             new TeleportCommand(),
             new SavePosCommand(),
-            new PosCommand()
+            new PosCommand(),
+            new TimeWarpCommand(),
         };
         foreach (var command in commands)
         {
@@ -121,6 +128,7 @@ public class ScheduleToolbox : MelonMod
             Console.Commands.Add(command);
             Logger.Msg($"Registered command: {commandWord}");
         }
+        _addedCommands = true;
     }
 
     public override void OnGUI()
