@@ -30,7 +30,7 @@ public class TimeWarpCommand : Console.ConsoleCommand
 #endif
     public override string CommandWord => "timewarp";
     public override string CommandDescription => "Temporarily speeds up time in the game world.";
-    public override string ExampleUsage => "timewarp [seconds] | timewarp stop";
+    public override string ExampleUsage => "timewarp [seconds] [timescale] | timewarp stop";
     
     private readonly Console.ConsoleCommand _timeScaleCommand = Console.commands["settimescale"];
 
@@ -70,7 +70,7 @@ public class TimeWarpCommand : Console.ConsoleCommand
 
                     // Set timescale to speed up time
                     _timeScaleCommand.Execute(_warpDefault);
-                    MelonLogger.Msg($"Time warp started for {seconds} seconds. Time scale set to 10.");
+                    MelonLogger.Msg($"Time warp started for {seconds} seconds. Timescale set to 10.");
                     
                     // Wait for the specified duration
                     MelonCoroutines.Start(ResetTimeWarp(seconds));
@@ -79,6 +79,27 @@ public class TimeWarpCommand : Console.ConsoleCommand
                 {
                     MelonLogger.Warning("Invalid argument. Use 'timewarp stop' to stop or 'timewarp <seconds>' to start.");
                 }
+                break;
+            }
+            case 2:
+            {
+                if (!float.TryParse(args.AsEnumerable().ElementAt(0), out var seconds))
+                    MelonLogger.Warning("Invalid time value. Please provide a valid number of seconds.");
+                if (seconds <= 0)
+                {
+                    MelonLogger.Warning("Time warp duration must be a positive number.");
+                    return;
+                }
+                var timeScale = args.AsEnumerable().ElementAt(1);
+                // construct list
+                #if MONO
+                var timeScaleArgs = new List() { timeScale };
+                #else
+                var timeScaleArgs = new[] { timeScale }.ToIl2CppList();
+                #endif
+                _timeScaleCommand.Execute(timeScaleArgs);
+                MelonLogger.Msg($"Time warp started for {seconds} seconds. Time scale set to {timeScale}.");
+                MelonCoroutines.Start(ResetTimeWarp(seconds));
                 break;
             }
             default:
