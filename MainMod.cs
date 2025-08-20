@@ -120,6 +120,8 @@ public class ScheduleToolbox : MelonMod
             new SavePosCommand(),
             new PosCommand(),
             new TimeWarpCommand(),
+            new ForceCartelDealCommand(),
+            new SetCartelInfluenceCommand(),
         };
         foreach (var command in commands)
         {
