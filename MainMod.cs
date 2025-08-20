@@ -28,7 +28,7 @@ public static class BuildInfo
     public const string Name = "ScheduleToolbox";
     public const string Description = "Testing tools for Schedule I";
     public const string Author = "k073l";
-    public const string Version = "1.1.1";
+    public const string Version = "2.0.0";
 }
 
 public class ScheduleToolbox : MelonMod

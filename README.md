@@ -23,6 +23,10 @@ A few commands and utilities for S1 mod testing.
 
 - `timewarp` command - allows you to temporarily speed up the game time, useful for testing things that take a long time to happen
 
+- `forcecarteldeal` command - Forces a new cartel deal, removing existing one
+- `setcartelinfluence` command - Sets the cartel influence in specified region to a specified value.
+    `setcartelinfluence docks 1` - sets the cartel influence in the docks region to 1 (100%)
+
 - In-game help for added commands (accessed by commands button, below console switch)
 - Disclaimer screen skip - faster game startup
 - Hold-to-load - hold the number key button to load the game in that slot
