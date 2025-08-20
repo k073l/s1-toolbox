@@ -35,9 +35,11 @@ public class TimeWarpCommand : Console.ConsoleCommand
     private readonly Console.ConsoleCommand _timeScaleCommand = Console.commands["settimescale"];
 
 #if !MONO
+    private static List _timeScaleDefault = new[] { "5" }.ToIl2CppList();
     private static List _warpDefault = new[] { "10" }.ToIl2CppList();
     private static List _warpStop = new[] { "1" }.ToIl2CppList();
 #else
+    private static List _timeScaleDefault = ["5"];
     private static List _warpDefault = ["10"];
     private static List _warpStop = ["1"];
 #endif
@@ -69,8 +71,8 @@ public class TimeWarpCommand : Console.ConsoleCommand
                     }
 
                     // Set timescale to speed up time
-                    _timeScaleCommand.Execute(_warpDefault);
-                    MelonLogger.Msg($"Time warp started for {seconds} seconds. Timescale set to 10.");
+                    _timeScaleCommand.Execute(_timeScaleDefault);
+                    MelonLogger.Msg($"Time warp started for {seconds} seconds. Timescale set to 5.");
                     
                     // Wait for the specified duration
                     MelonCoroutines.Start(ResetTimeWarp(seconds));
