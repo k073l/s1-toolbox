@@ -13,6 +13,7 @@ using Object = UnityEngine.Object;
 
 namespace ScheduleToolbox.Commands;
 
+[RegisterTypeInIl2Cpp]
 public class ForceCartelDealCommand: Console.ConsoleCommand
 {
 #if !MONO

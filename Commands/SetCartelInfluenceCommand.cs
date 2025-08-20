@@ -11,10 +11,12 @@ using List = Il2CppSystem.Collections.Generic.List<string>;
 using Il2CppInterop.Runtime.Injection;
 #endif
 using MelonLoader;
+using ScheduleToolbox.Helpers;
 using Object = UnityEngine.Object;
 
 namespace ScheduleToolbox.Commands;
 
+[RegisterTypeInIl2Cpp]
 public class SetCartelInfluenceCommand: Console.ConsoleCommand
 {
 #if !MONO
@@ -60,7 +62,7 @@ public class SetCartelInfluenceCommand: Console.ConsoleCommand
             return;
         }
 
-        cartelInfluence.SetInfluence(region, influence);
+        cartelInfluence.SetInfluence(null, region, influence);
         MelonLogger.Msg($"Set cartel influence for {regionName} to {influence}.");
     }
 }
