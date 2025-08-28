@@ -1,7 +1,8 @@
 # Changelog
 
 ## 2.1.0
-- Added command history
+- Added command history, browse previous commands with Up/Down arrow keys
+- Rudimentary autocomplete - press Tab to autocomplete command names
 ## 2.0.0
 - Added `forcecarteldeal` command - forces a new cartel deal, removing existing one
 - Added `setcartelinfluence` command - sets the cartel influence in specified region to a specified value

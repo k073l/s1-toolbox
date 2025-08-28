@@ -33,3 +33,5 @@ A few commands and utilities for S1 mod testing.
 
 ex. holding `1` will load the game in slot 1, holding `2` will load the game in slot 2, etc. You need to hold the button for 0.5 seconds. This feature only works the in menu.
 
+- Command history - executed commands will be saved in `UserData/ScheduleToolbox/history.log` and can be accessed using up/down arrow keys in console
+- Command autocomplete - start typing a command and press tab to autocomplete it. Can also be used to cycle through available commands if multiple match the typed prefix.
