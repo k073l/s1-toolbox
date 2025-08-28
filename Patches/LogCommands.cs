@@ -40,7 +40,14 @@ public class LogCommands
         }
         args.RemoveAt(0);
         command.Execute(args);
-        var argsJoined = string.Join(" ", args);
+        // Join args, manually since string.Join doesn't support Il2CppList
+        var argsJoined = "";
+        for (var i = 0; i < args.Count; i++)
+        {
+            argsJoined += args.AsEnumerable().ElementAt(i);
+            if (i < args.Count - 1) argsJoined += " ";
+        }
+        
         MelonLogger.Msg($"Executed command: {commandWord} {argsJoined}");
         // Append to file
         var file = Path.Combine(MelonEnvironment.UserDataDirectory, "ScheduleToolbox", "history.log");
