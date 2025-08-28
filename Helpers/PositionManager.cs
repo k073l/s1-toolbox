@@ -60,7 +60,7 @@ public class SavedPositionsData
 
 public static class PositionManager
 {
-    private static readonly string SaveFilePath = Path.Combine(MelonEnvironment.UserDataDirectory, "ScheduleToolbox.json");
+    private static readonly string SaveFilePath = Path.Combine(MelonEnvironment.UserDataDirectory, "ScheduleToolbox" , "ScheduleToolbox.json");
     private static readonly MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-PositionManager");
     private static SavedPositionsData _data;
 
@@ -99,6 +99,7 @@ public static class PositionManager
         try
         {
             var json = JsonConvert.SerializeObject(_data, Formatting.Indented);
+            Directory.CreateDirectory(Path.GetDirectoryName(SaveFilePath)!);
             File.WriteAllText(SaveFilePath, json);
             Logger.Debug($"Saved {_data.Positions.Count} positions to: {SaveFilePath}");
         }
