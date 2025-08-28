@@ -1,12 +1,14 @@
-﻿using FishNet;
-using HarmonyLib;
+﻿using HarmonyLib;
 using MelonLoader;
 using MelonLoader.Utils;
+using ScheduleToolbox.Helpers;
 using UnityEngine;
 #if MONO
+using FishNet;
 using Console = ScheduleOne.Console;
 using List = System.Collections.Generic.List<string>;
 #else
+using Il2CppFishNet;
 using Console = Il2CppScheduleOne.Console;
 using List = Il2CppSystem.Collections.Generic.List<string>;
 #endif
@@ -23,10 +25,14 @@ public class LogCommands
         if (args.Count == 0 || (!InstanceFinder.IsHost && !Debug.isDebugBuild && !Application.isEditor)) return true;
         for (var i = 0; i < args.Count; i++)
         {
+#if MONO
             args[i] = args[i].ToLower();
+#else
+            args._items[i] = args._items[i].ToLower();
+#endif
         }
             
-        var commandWord = args.ElementAt(0);
+        var commandWord = args.AsEnumerable().ElementAt(0);
         if (!Console.commands.TryGetValue(commandWord, out var command))
         {
             Console.LogWarning($"Command {commandWord} not found.");
