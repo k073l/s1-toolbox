@@ -18,7 +18,7 @@ namespace ScheduleToolbox.Patches;
 [HarmonyPatch(typeof(Console))]
 public class LogCommands
 {
-    [HarmonyPatch("SubmitCommand", new []{typeof(List<string>)})]
+    [HarmonyPatch(nameof(Console.SubmitCommand), new []{typeof(List)})]
     [HarmonyPrefix]
     public static bool LogConsoleCommands(Console __instance, List args)
     {
