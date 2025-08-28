@@ -1,5 +1,7 @@
 # Changelog
 
+## 2.1.0
+- Added command history
 ## 2.0.0
 - Added `forcecarteldeal` command - forces a new cartel deal, removing existing one
 - Added `setcartelinfluence` command - sets the cartel influence in specified region to a specified value
