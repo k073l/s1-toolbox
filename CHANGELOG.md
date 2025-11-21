@@ -1,5 +1,7 @@
 # Changelog
 
+## 2.1.1
+- Added `forcedeal` command - forces a new deal with specified customer
 ## 2.1.0
 - Added command history, browse previous commands with Up/Down arrow keys
 - Rudimentary autocomplete - press Tab to autocomplete command names

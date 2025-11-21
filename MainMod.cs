@@ -33,7 +33,7 @@ public static class BuildInfo
     public const string Name = "ScheduleToolbox";
     public const string Description = "Testing tools for Schedule I";
     public const string Author = "k073l";
-    public const string Version = "2.1.0";
+    public const string Version = "2.1.1";
 }
 
 public class ScheduleToolbox : MelonMod
@@ -250,6 +250,7 @@ public class ScheduleToolbox : MelonMod
             new TimeWarpCommand(),
             new ForceCartelDealCommand(),
             new SetCartelInfluenceCommand(),
+            new ForceDealCommand(),
         };
         foreach (var command in commands)
         {
