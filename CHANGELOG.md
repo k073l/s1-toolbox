@@ -1,5 +1,7 @@
 # Changelog
 
+## 2.1.2
+- Added a patch to fix `Settings.GetDefaultUnitTypeForPlayer` crashing if CultureInfo is `CultureInvariant`. This issue caused settings to reset to default on every game start for some players.
 ## 2.1.1
 - Added `forcedeal` command - forces a new deal with specified customer
 ## 2.1.0

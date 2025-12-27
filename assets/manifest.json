@@ -1,6 +1,6 @@
 {
     "name": "ScheduleToolbox",
-    "version_number": "2.1.1",
+    "version_number": "2.1.2",
     "website_url": "https://github.com/k073l/s1-toolbox",
     "description": "Testing tools for Schedule I",
     "dependencies": [
