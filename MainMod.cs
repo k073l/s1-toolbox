@@ -33,7 +33,7 @@ public static class BuildInfo
     public const string Name = "ScheduleToolbox";
     public const string Description = "Testing tools for Schedule I";
     public const string Author = "k073l";
-    public const string Version = "2.1.2";
+    public const string Version = "2.1.3";
 }
 
 public class ScheduleToolbox : MelonMod
@@ -61,10 +61,17 @@ public class ScheduleToolbox : MelonMod
     private static string autocompletePrefix = string.Empty;
     private static bool autocompleteActive = false;
     
+    private static MelonPreferences_Category _settingsCategory;
+    internal static MelonPreferences_Entry<int> MaxBufferLines;
+    
     public override void OnInitializeMelon()
     {
         Logger = LoggerInstance;
         Logger.Msg("ScheduleToolbox initialized");
+        
+        _settingsCategory = MelonPreferences.CreateCategory("ScheduleToolbox-Settings", "Schedule Toolbox Settings");
+        MaxBufferLines = _settingsCategory.CreateEntry("MaxConsoleBufferLines", 0, "Max Console Buffer Lines",
+            "Maximum number of lines to keep in the console history file. Set to 0 for unlimited.");
     }
 
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
