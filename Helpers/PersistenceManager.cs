@@ -2,6 +2,7 @@
 using MelonLoader.Utils;
 using UnityEngine;
 using Newtonsoft.Json;
+using ScheduleToolbox.Models;
 #if MONO
 using Object = System.Object;
 #else
@@ -10,68 +11,20 @@ using Object = Il2CppSystem.Object;
 
 namespace ScheduleToolbox.Helpers;
 
-[Serializable]
-public class SerializableVector3
-{
-    public float x, y, z;
-
-    public SerializableVector3() { }
-
-    public SerializableVector3(Vector3 v)
-    {
-        x = v.x;
-        y = v.y;
-        z = v.z;
-    }
-
-    public Vector3 ToUnity() => new Vector3(x, y, z);
-}
-
-[Serializable]
-public class SerializableQuaternion
-{
-    public float x, y, z, w;
-
-    public SerializableQuaternion() { }
-
-    public SerializableQuaternion(Quaternion q)
-    {
-        x = q.x;
-        y = q.y;
-        z = q.z;
-        w = q.w;
-    }
-
-    public Quaternion ToUnity() => new Quaternion(x, y, z, w);
-}
-
-[Serializable]
-public class SavedPosition
-{
-    public SerializableVector3 position;
-    public SerializableQuaternion rotation;
-}
-
-[Serializable]
-public class SavedPositionsData
-{
-    public Dictionary<string, SavedPosition> Positions = new();
-}
-
-public static class PositionManager
+public static class PersistenceManager
 {
     private static readonly string SaveFilePath = Path.Combine(MelonEnvironment.UserDataDirectory, "ScheduleToolbox" , "ScheduleToolbox.json");
     private static readonly MelonLogger.Instance Logger = new MelonLogger.Instance($"{BuildInfo.Name}-PositionManager");
-    private static SavedPositionsData _data;
+    public static ToolboxData Data { get; private set; }
 
-    static PositionManager()
+    static PersistenceManager()
     {
         Load();
     }
 
     public static void SavePosition(string name, Vector3 position, Quaternion rotation)
     {
-        _data.Positions[name] = new SavedPosition
+        Data.Positions[name] = new SavedPosition
         {
             position = new SerializableVector3(position),
             rotation = new SerializableQuaternion(rotation)
@@ -82,7 +35,7 @@ public static class PositionManager
 
     public static bool TryGetPosition(string name, out Vector3 position, out Quaternion rotation)
     {
-        if (_data.Positions.TryGetValue(name, out var saved))
+        if (Data.Positions.TryGetValue(name, out var saved))
         {
             position = saved.position.ToUnity();
             rotation = saved.rotation.ToUnity();
@@ -94,14 +47,28 @@ public static class PositionManager
         return false;
     }
 
+    public static void SaveKeybind(KeyCode key, string command)
+    {
+        if (Data.Keybindings.TryGetValue(key.ToString(), out var saved) && saved != command)
+            Logger.Msg($"Overwriting keybind for {key}: '{saved}' -> '{command}'");
+        Data.Keybindings[key.ToString()] = command;
+        Save();
+    }
+    
+    public static void RemoveKeybind(KeyCode key)
+    {
+        Data.Keybindings.Remove(key.ToString());
+        Save();
+    }
+
     public static void Save()
     {
         try
         {
-            var json = JsonConvert.SerializeObject(_data, Formatting.Indented);
+            var json = JsonConvert.SerializeObject(Data, Formatting.Indented);
             Directory.CreateDirectory(Path.GetDirectoryName(SaveFilePath)!);
             File.WriteAllText(SaveFilePath, json);
-            Logger.Debug($"Saved {_data.Positions.Count} positions to: {SaveFilePath}");
+            Logger.Debug($"Saved {Data.Positions.Count} positions to: {SaveFilePath}");
         }
         catch (Exception ex)
         {
@@ -116,19 +83,19 @@ public static class PositionManager
             if (File.Exists(SaveFilePath))
             {
                 var json = File.ReadAllText(SaveFilePath);
-                _data = JsonConvert.DeserializeObject<SavedPositionsData>(json) ?? new SavedPositionsData();
-                Logger.Debug($"Loaded {_data.Positions.Count} positions.");
+                Data = JsonConvert.DeserializeObject<ToolboxData>(json) ?? new ToolboxData();
+                Logger.Debug($"Loaded {Data.Positions.Count} positions.");
             }
             else
             {
                 Logger.Debug("Save file not found. Starting fresh.");
-                _data = new SavedPositionsData();
+                Data = new ToolboxData();
             }
         }
         catch (Exception ex)
         {
             Logger.Error($"Load failed: {ex}");
-            _data = new SavedPositionsData();
+            Data = new ToolboxData();
         }
     }
 }

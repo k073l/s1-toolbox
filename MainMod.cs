@@ -68,7 +68,8 @@ public class ScheduleToolbox : MelonMod
     {
         Logger = LoggerInstance;
         Logger.Msg("ScheduleToolbox initialized");
-        
+        var _ = PersistenceManager.Data; // force load persistence data, i love il2cpp
+
         _settingsCategory = MelonPreferences.CreateCategory("ScheduleToolbox-Settings", "Schedule Toolbox Settings");
         MaxBufferLines = _settingsCategory.CreateEntry("MaxConsoleBufferLines", 0, "Max Console Buffer Lines",
             "Maximum number of lines to keep in the console history file. Set to 0 for unlimited.");

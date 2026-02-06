@@ -53,7 +53,7 @@ public class SavePosCommand : Console.ConsoleCommand
         var pos = PlayerCamera.Instance.transform.position;
         var rot = PlayerCamera.Instance.transform.rotation;
 
-        PositionManager.SavePosition(name, pos, rot);
+        PersistenceManager.SavePosition(name, pos, rot);
 
         Logger.Msg($"Saved position '{name}': {pos.x},{pos.y},{pos.z} | {rot.x},{rot.y},{rot.z}");
         _guiMessage = $"Saved '{name}' at {pos.x}, {pos.y}, {pos.z}!";

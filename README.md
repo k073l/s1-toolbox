@@ -37,3 +37,4 @@ ex. holding `1` will load the game in slot 1, holding `2` will load the game in 
 
 - Command history - executed commands will be saved in `UserData/ScheduleToolbox/history.log` and can be accessed using up/down arrow keys in console
 - Command autocomplete - start typing a command and press tab to autocomplete it. Can also be used to cycle through available commands if multiple match the typed prefix.
+- Keybind persistence - `bind` a command to a key like usual, the binding will be saved and loaded on load. `unbind` a key to remove the saved binding or `clearbinds` to remove all saved bindings.

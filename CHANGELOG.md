@@ -3,6 +3,7 @@
 ## 2.1.3
 - Added max buffer size option to limit the size of command history log file. Default is 0 lines (unlimited).
 - Removed base game command history to avoid conflicts with toolbox command history.
+- Added keybind persistence
 ## 2.1.2
 - Added a patch to fix `Settings.GetDefaultUnitTypeForPlayer` crashing if CultureInfo is `CultureInvariant`. This issue caused settings to reset to default on every game start for some players.
 ## 2.1.1

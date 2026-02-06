@@ -43,7 +43,7 @@ public class TeleportCommand : Console.ConsoleCommand
             {
                 var locationName = args.AsEnumerable().ElementAt(0);
 
-                if (PositionManager.TryGetPosition(locationName, out var position, out var rotation))
+                if (PersistenceManager.TryGetPosition(locationName, out var position, out var rotation))
                 {
                     PlayerMovement.Instance.Teleport(position);
                     Player.Local.transform.rotation = rotation;
