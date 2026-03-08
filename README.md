@@ -23,6 +23,8 @@ A few commands and utilities for S1 mod testing.
 
 - `timewarp` command - allows you to temporarily speed up the game time, useful for testing things that take a long time to happen
 
+timewarp is also exposed via keybinds, letting you easily control time speed (configurable via MelonPreferences)
+
 - `forcecarteldeal` command - Forces a new cartel deal, removing existing one
 - `setcartelinfluence` command - Sets the cartel influence in specified region to a specified value.
     `setcartelinfluence docks 1` - sets the cartel influence in the docks region to 1 (100%)
@@ -38,3 +40,6 @@ ex. holding `1` will load the game in slot 1, holding `2` will load the game in 
 - Command history - executed commands will be saved in `UserData/ScheduleToolbox/history.log` and can be accessed using up/down arrow keys in console
 - Command autocomplete - start typing a command and press tab to autocomplete it. Can also be used to cycle through available commands if multiple match the typed prefix.
 - Keybind persistence - `bind` a command to a key like usual, the binding will be saved and loaded on load. `unbind` a key to remove the saved binding or `clearbinds` to remove all saved bindings.
+
+## Credits
+- [HazDS](https://github.com/HazDS) for contributing timewarp keybind and GUI feature
