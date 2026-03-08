@@ -1,5 +1,6 @@
 using System.Collections;
 using MelonLoader;
+using MelonLoader.Preferences;
 using MelonLoader.Utils;
 using UnityEngine;
 using ScheduleToolbox.Commands;
@@ -63,7 +64,18 @@ public class ScheduleToolbox : MelonMod
     
     private static MelonPreferences_Category _settingsCategory;
     internal static MelonPreferences_Entry<int> MaxBufferLines;
-    
+
+    // Timewarp keybind preferences
+    private static MelonPreferences_Entry<KeyCode> _timewarpToggleKey;
+    private static MelonPreferences_Entry<KeyCode> _timewarpSpeedUpKey;
+    private static MelonPreferences_Entry<KeyCode> _timewarpSlowDownKey;
+    private static MelonPreferences_Entry<float> _timewarpDefaultSpeed;
+    private static MelonPreferences_Entry<float> _timewarpSpeedStep;
+    private static MelonPreferences_Entry<float> _timewarpMinSpeed;
+    private static MelonPreferences_Entry<float> _timewarpMaxSpeed;
+
+    private float _currentTimewarpSpeed;
+
     public override void OnInitializeMelon()
     {
         Logger = LoggerInstance;
@@ -73,6 +85,23 @@ public class ScheduleToolbox : MelonMod
         _settingsCategory = MelonPreferences.CreateCategory("ScheduleToolbox-Settings", "Schedule Toolbox Settings");
         MaxBufferLines = _settingsCategory.CreateEntry("MaxConsoleBufferLines", 0, "Max Console Buffer Lines",
             "Maximum number of lines to keep in the console history file. Set to 0 for unlimited.");
+
+        _timewarpToggleKey = _settingsCategory.CreateEntry("TimewarpToggleKey", KeyCode.KeypadMultiply, "Timewarp Toggle Key",
+            "Key to toggle timewarp on/off.");
+        _timewarpSpeedUpKey = _settingsCategory.CreateEntry("TimewarpSpeedUpKey", KeyCode.KeypadPlus, "Timewarp Speed Up Key",
+            "Key to increase timewarp speed.");
+        _timewarpSlowDownKey = _settingsCategory.CreateEntry("TimewarpSlowDownKey", KeyCode.KeypadMinus, "Timewarp Slow Down Key",
+            "Key to decrease timewarp speed.");
+        _timewarpDefaultSpeed = _settingsCategory.CreateEntry("TimewarpDefaultSpeed", 5f, "Timewarp Default Speed",
+            "Default timewarp speed multiplier.", validator: new ValueRange<float>(1f, 100f));
+        _timewarpSpeedStep = _settingsCategory.CreateEntry("TimewarpSpeedStep", 1f, "Timewarp Speed Step",
+            "Amount to increase/decrease speed per key press.", validator: new ValueRange<float>(0.1f, 50f));
+        _timewarpMinSpeed = _settingsCategory.CreateEntry("TimewarpMinSpeed", 2f, "Timewarp Min Speed",
+            "Minimum timewarp speed.", validator: new ValueRange<float>(1f, 100f));
+        _timewarpMaxSpeed = _settingsCategory.CreateEntry("TimewarpMaxSpeed", 20f, "Timewarp Max Speed",
+            "Maximum timewarp speed.", validator: new ValueRange<float>(1f, 100f));
+
+        _currentTimewarpSpeed = _timewarpDefaultSpeed.Value;
     }
 
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
@@ -80,6 +109,7 @@ public class ScheduleToolbox : MelonMod
         if (sceneName == "Menu")
         {
             _shouldResetTimers = true;
+            TimeWarpCommand.Stop();
         }
         if (sceneName == "Main") 
         {
@@ -97,8 +127,41 @@ public class ScheduleToolbox : MelonMod
         if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Main")
         {
             ConsoleImprovements();
+
+            // Timewarp keybinds - only when console is closed
+            if (_consoleUI == null || _consoleUI.canvas == null || !_consoleUI.canvas.enabled)
+            {
+                if (Input.GetKeyDown(_timewarpToggleKey.Value))
+                {
+                    if (TimeWarpCommand.IsActive)
+                        TimeWarpCommand.Stop();
+                    else
+                    {
+                        _currentTimewarpSpeed = _timewarpDefaultSpeed.Value;
+                        TimeWarpCommand.Toggle(_currentTimewarpSpeed);
+                    }
+                }
+
+                if (Input.GetKeyDown(_timewarpSpeedUpKey.Value))
+                {
+                    _currentTimewarpSpeed = Mathf.Clamp(
+                        _currentTimewarpSpeed + _timewarpSpeedStep.Value,
+                        _timewarpMinSpeed.Value, _timewarpMaxSpeed.Value);
+                    if (TimeWarpCommand.IsActive)
+                        TimeWarpCommand.SetSpeed(_currentTimewarpSpeed);
+                }
+
+                if (Input.GetKeyDown(_timewarpSlowDownKey.Value))
+                {
+                    _currentTimewarpSpeed = Mathf.Clamp(
+                        _currentTimewarpSpeed - _timewarpSpeedStep.Value,
+                        _timewarpMinSpeed.Value, _timewarpMaxSpeed.Value);
+                    if (TimeWarpCommand.IsActive)
+                        TimeWarpCommand.SetSpeed(_currentTimewarpSpeed);
+                }
+            }
         }
-        
+
         // Hold timers for keys 1-5
         if (_shouldResetTimers)
         {
@@ -274,5 +337,6 @@ public class ScheduleToolbox : MelonMod
     {
         PosCommand.OnGUI();
         SavePosCommand.OnGUI();
+        TimeWarpCommand.OnGUI();
     }
 }

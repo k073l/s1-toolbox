@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using HarmonyLib;
 using MelonLoader;
 using ScheduleToolbox.Helpers;
@@ -31,7 +31,7 @@ public class TimeWarpCommand : Console.ConsoleCommand
     public override string CommandWord => "timewarp";
     public override string CommandDescription => "Temporarily speeds up time in the game world.";
     public override string ExampleUsage => "timewarp [seconds] [timescale] | timewarp stop";
-    
+
     private readonly Console.ConsoleCommand _timeScaleCommand = Console.commands["settimescale"];
 
 #if !MONO
@@ -43,7 +43,79 @@ public class TimeWarpCommand : Console.ConsoleCommand
     private static List _warpDefault = ["10"];
     private static List _warpStop = ["1"];
 #endif
-    
+
+    // Static toggle state for keybind-driven timewarp
+    public static bool IsActive { get; private set; }
+    public static float CurrentSpeed { get; private set; }
+
+    public static void Toggle(float speed)
+    {
+        if (IsActive)
+        {
+            Stop();
+            return;
+        }
+
+        SetSpeed(speed);
+        IsActive = true;
+        MelonLogger.Msg($"Timewarp toggled ON at {CurrentSpeed}x.");
+    }
+
+    public static void Stop()
+    {
+        if (!IsActive) return;
+        var cmd = Console.commands["settimescale"];
+#if MONO
+        cmd.Execute(new List { "1" });
+#else
+        cmd.Execute(new[] { "1" }.ToIl2CppList());
+#endif
+        IsActive = false;
+        MelonLogger.Msg("Timewarp toggled OFF.");
+    }
+
+    public static void SetSpeed(float speed)
+    {
+        CurrentSpeed = speed;
+        var cmd = Console.commands["settimescale"];
+#if MONO
+        cmd.Execute(new List { speed.ToString("F1") });
+#else
+        cmd.Execute(new[] { speed.ToString("F1") }.ToIl2CppList());
+#endif
+        if (IsActive)
+            MelonLogger.Msg($"Timewarp speed changed to {CurrentSpeed}x.");
+    }
+
+    private static GUIStyle _hudStyle;
+    private static GUIStyle _hudBgStyle;
+
+    public static void OnGUI()
+    {
+        if (!IsActive) return;
+
+        _hudStyle ??= new GUIStyle(GUI.skin.label)
+        {
+            fontSize = 18,
+            fontStyle = FontStyle.Bold,
+            alignment = TextAnchor.MiddleCenter,
+            normal = { textColor = new Color(1f, 0.85f, 0.2f) }
+        };
+
+        _hudBgStyle ??= new GUIStyle(GUI.skin.box)
+        {
+            alignment = TextAnchor.MiddleCenter
+        };
+
+        var text = $"TIMEWARP: {CurrentSpeed}x";
+        var width = 200f;
+        var height = 30f;
+        var rect = new Rect((Screen.width - width) / 2f, 10f, width, height);
+
+        GUI.Box(rect, "", _hudBgStyle);
+        GUI.Label(rect, text, _hudStyle);
+    }
+
     public override void Execute(List args)
     {
         switch (args.Count)
@@ -73,7 +145,7 @@ public class TimeWarpCommand : Console.ConsoleCommand
                     // Set timescale to speed up time
                     _timeScaleCommand.Execute(_timeScaleDefault);
                     MelonLogger.Msg($"Time warp started for {seconds} seconds. Timescale set to 5.");
-                    
+
                     // Wait for the specified duration
                     MelonCoroutines.Start(ResetTimeWarp(seconds));
                 }
