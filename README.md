@@ -30,6 +30,7 @@ timewarp is also exposed via keybinds, letting you easily control time speed (co
     `setcartelinfluence docks 1` - sets the cartel influence in the docks region to 1 (100%)
 
 - `forcedeal` command - Forces a new deal with specified customer, e.g. `forcedeal kyle_cooley`
+- `copyhand` and `pastehand` - Copy held item with all properties (like quality, quantity, packaging etc.) and paste it back in
 
 - In-game help for added commands (accessed by commands button, below console switch)
 - Disclaimer screen skip - faster game startup

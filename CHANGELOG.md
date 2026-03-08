@@ -2,6 +2,7 @@
 
 ## 2.1.4
 - Added timewarp keybinds and hud for easy time control (by HazDS in [#1](https://github.com/k073l/s1-toolbox/pull/1))
+- Added `copyhand` and `pastehand` commands for copying and pasting held items
 ## 2.1.3
 - Added max buffer size option to limit the size of command history log file. Default is 0 lines (unlimited).
 - Removed base game command history to avoid conflicts with toolbox command history.

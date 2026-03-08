@@ -322,6 +322,8 @@ public class ScheduleToolbox : MelonMod
             new ForceCartelDealCommand(),
             new SetCartelInfluenceCommand(),
             new ForceDealCommand(),
+            new CopyCommand(),
+            new PasteCommand(),
         };
         foreach (var command in commands)
         {
