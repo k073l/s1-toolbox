@@ -1,5 +1,6 @@
 using System.Collections;
 using MelonLoader;
+using MelonLoader.Preferences;
 using MelonLoader.Utils;
 using UnityEngine;
 using ScheduleToolbox.Commands;
@@ -65,17 +66,14 @@ public class ScheduleToolbox : MelonMod
     internal static MelonPreferences_Entry<int> MaxBufferLines;
 
     // Timewarp keybind preferences
-    private static MelonPreferences_Entry<string> _timewarpToggleKey;
-    private static MelonPreferences_Entry<string> _timewarpSpeedUpKey;
-    private static MelonPreferences_Entry<string> _timewarpSlowDownKey;
+    private static MelonPreferences_Entry<KeyCode> _timewarpToggleKey;
+    private static MelonPreferences_Entry<KeyCode> _timewarpSpeedUpKey;
+    private static MelonPreferences_Entry<KeyCode> _timewarpSlowDownKey;
     private static MelonPreferences_Entry<float> _timewarpDefaultSpeed;
     private static MelonPreferences_Entry<float> _timewarpSpeedStep;
     private static MelonPreferences_Entry<float> _timewarpMinSpeed;
     private static MelonPreferences_Entry<float> _timewarpMaxSpeed;
 
-    private KeyCode _toggleKey;
-    private KeyCode _speedUpKey;
-    private KeyCode _slowDownKey;
     private float _currentTimewarpSpeed;
 
     public override void OnInitializeMelon()
@@ -88,42 +86,22 @@ public class ScheduleToolbox : MelonMod
         MaxBufferLines = _settingsCategory.CreateEntry("MaxConsoleBufferLines", 0, "Max Console Buffer Lines",
             "Maximum number of lines to keep in the console history file. Set to 0 for unlimited.");
 
-        _timewarpToggleKey = _settingsCategory.CreateEntry("TimewarpToggleKey", "KeypadMultiply", "Timewarp Toggle Key",
-            "Key to toggle timewarp on/off. Uses UnityEngine.KeyCode names.");
-        _timewarpSpeedUpKey = _settingsCategory.CreateEntry("TimewarpSpeedUpKey", "KeypadPlus", "Timewarp Speed Up Key",
+        _timewarpToggleKey = _settingsCategory.CreateEntry("TimewarpToggleKey", KeyCode.KeypadMultiply, "Timewarp Toggle Key",
+            "Key to toggle timewarp on/off.");
+        _timewarpSpeedUpKey = _settingsCategory.CreateEntry("TimewarpSpeedUpKey", KeyCode.KeypadPlus, "Timewarp Speed Up Key",
             "Key to increase timewarp speed.");
-        _timewarpSlowDownKey = _settingsCategory.CreateEntry("TimewarpSlowDownKey", "KeypadMinus", "Timewarp Slow Down Key",
+        _timewarpSlowDownKey = _settingsCategory.CreateEntry("TimewarpSlowDownKey", KeyCode.KeypadMinus, "Timewarp Slow Down Key",
             "Key to decrease timewarp speed.");
         _timewarpDefaultSpeed = _settingsCategory.CreateEntry("TimewarpDefaultSpeed", 5f, "Timewarp Default Speed",
-            "Default timewarp speed multiplier.");
+            "Default timewarp speed multiplier.", validator: new ValueRange<float>(1f, 100f));
         _timewarpSpeedStep = _settingsCategory.CreateEntry("TimewarpSpeedStep", 1f, "Timewarp Speed Step",
-            "Amount to increase/decrease speed per key press.");
+            "Amount to increase/decrease speed per key press.", validator: new ValueRange<float>(0.1f, 50f));
         _timewarpMinSpeed = _settingsCategory.CreateEntry("TimewarpMinSpeed", 2f, "Timewarp Min Speed",
-            "Minimum timewarp speed.");
+            "Minimum timewarp speed.", validator: new ValueRange<float>(1f, 100f));
         _timewarpMaxSpeed = _settingsCategory.CreateEntry("TimewarpMaxSpeed", 20f, "Timewarp Max Speed",
-            "Maximum timewarp speed.");
+            "Maximum timewarp speed.", validator: new ValueRange<float>(1f, 100f));
 
-        ParseTimewarpKeys();
         _currentTimewarpSpeed = _timewarpDefaultSpeed.Value;
-    }
-
-    private void ParseTimewarpKeys()
-    {
-        if (!Enum.TryParse<KeyCode>(_timewarpToggleKey.Value, out _toggleKey))
-        {
-            Logger.Warning($"Invalid TimewarpToggleKey '{_timewarpToggleKey.Value}', defaulting to KeypadMultiply");
-            _toggleKey = KeyCode.KeypadMultiply;
-        }
-        if (!Enum.TryParse<KeyCode>(_timewarpSpeedUpKey.Value, out _speedUpKey))
-        {
-            Logger.Warning($"Invalid TimewarpSpeedUpKey '{_timewarpSpeedUpKey.Value}', defaulting to KeypadPlus");
-            _speedUpKey = KeyCode.KeypadPlus;
-        }
-        if (!Enum.TryParse<KeyCode>(_timewarpSlowDownKey.Value, out _slowDownKey))
-        {
-            Logger.Warning($"Invalid TimewarpSlowDownKey '{_timewarpSlowDownKey.Value}', defaulting to KeypadMinus");
-            _slowDownKey = KeyCode.KeypadMinus;
-        }
     }
 
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
@@ -153,7 +131,7 @@ public class ScheduleToolbox : MelonMod
             // Timewarp keybinds - only when console is closed
             if (_consoleUI == null || _consoleUI.canvas == null || !_consoleUI.canvas.enabled)
             {
-                if (Input.GetKeyDown(_toggleKey))
+                if (Input.GetKeyDown(_timewarpToggleKey.Value))
                 {
                     if (TimeWarpCommand.IsActive)
                         TimeWarpCommand.Stop();
@@ -164,7 +142,7 @@ public class ScheduleToolbox : MelonMod
                     }
                 }
 
-                if (Input.GetKeyDown(_speedUpKey))
+                if (Input.GetKeyDown(_timewarpSpeedUpKey.Value))
                 {
                     _currentTimewarpSpeed = Mathf.Clamp(
                         _currentTimewarpSpeed + _timewarpSpeedStep.Value,
@@ -173,7 +151,7 @@ public class ScheduleToolbox : MelonMod
                         TimeWarpCommand.SetSpeed(_currentTimewarpSpeed);
                 }
 
-                if (Input.GetKeyDown(_slowDownKey))
+                if (Input.GetKeyDown(_timewarpSlowDownKey.Value))
                 {
                     _currentTimewarpSpeed = Mathf.Clamp(
                         _currentTimewarpSpeed - _timewarpSpeedStep.Value,
