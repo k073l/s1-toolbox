@@ -43,6 +43,17 @@ public class TeleportCommand : Console.ConsoleCommand
             {
                 var locationName = args.AsEnumerable().ElementAt(0);
 
+                if (locationName.Trim() == "players")
+                {
+                    var playerMovements = Resources.FindObjectsOfTypeAll<PlayerMovement>().AsEnumerable();
+                    var filteredMovements = playerMovements.Where(pm => pm?.Player.IsLocalPlayer ?? false);
+                    if (!filteredMovements.Any())
+                        return;
+                    var localPos = Player.Local.CameraPosition;
+                    foreach (var playerMovement in filteredMovements)
+                        playerMovement.Teleport(localPos);
+                }
+
                 if (PersistenceManager.TryGetPosition(locationName, out var position, out var rotation))
                 {
                     PlayerMovement.Instance.Teleport(position);
