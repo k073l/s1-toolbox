@@ -87,6 +87,8 @@ public class ScheduleToolbox : MelonMod
             new ForceDealCommand(),
             new CopyCommand(),
             new PasteCommand(),
+            new ListItemsCommand(),
+            new ListNPCsCommand(),
         };
         foreach (var command in commands)
         {
