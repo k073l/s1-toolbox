@@ -56,9 +56,9 @@ public class LogCommands
 
         // Trim the file if it exceeds the max lines
         var lines = File.ReadAllLines(file).ToList();
-        if (ScheduleToolbox.MaxBufferLines.Value > 0 && lines.Count > ScheduleToolbox.MaxBufferLines.Value)
+        if (ConsoleManager.MaxBufferLines.Value > 0 && lines.Count > ConsoleManager.MaxBufferLines.Value)
         {
-            lines = lines.Skip(lines.Count - ScheduleToolbox.MaxBufferLines.Value).ToList();
+            lines = lines.Skip(lines.Count - ConsoleManager.MaxBufferLines.Value).ToList();
             File.WriteAllLines(file, lines);
         }
 
