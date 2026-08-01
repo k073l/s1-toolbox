@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.5
+- Added `listnpcs` command - lists every NPC in the game
+- Added `listitems` command - lists every storable item in the game
+- Compatibility with game version 0.4.6f11
 ## 2.1.4
 - Added timewarp keybinds and hud for easy time control (by HazDS in [#1](https://github.com/k073l/s1-toolbox/pull/1))
 - Added `copyhand` and `pastehand` commands for copying and pasting held items

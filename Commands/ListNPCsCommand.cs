@@ -42,7 +42,7 @@ public class ListNPCsCommand : Console.ConsoleCommand
         var matched = 0;
         foreach (var npc in NPCManager.NPCRegistry)
         {
-            var displayName = npc.fullName;
+            var displayName = npc.FullName;
             var id = npc.ID;
             var pos = npc.Movement.FootPosition;
 

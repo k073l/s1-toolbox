@@ -1,46 +1,135 @@
 # Schedule Toolbox
 
-A few commands and utilities for S1 mod testing.
+A collection of commands and quality-of-life features for Schedule I mod testing.
 
 ![icon](https://raw.githubusercontent.com/k073l/s1-toolbox/master/assets/icon.png)
 
-## Features
-- `fly` command - better freecam, will teleport you to the position you were at when you disable it by running it again
-- `pos` command - prints your current position in console and in GUI
-- `savepos` command - allows you to save your position with a name, for later use
+## Commands
 
-`savepos home1`, `savepos home2`, etc. will save your current position as `home1`, `home2`
+### Player
 
-- `tp` command - teleports you to a saved position, to a base game position (like `docks`) or to a position specified in coordinates (x, z or x, y, z)
+#### `fly`
+Enables an improved freecam. Run the command again to disable it and return to the position where you enabled freecam.
 
-`tp home1`, `tp home2` - will teleport you to the saved position `home1`, `home2`
+#### `pos`
+Displays your current position in both the console and on-screen GUI.
 
-`tp docks` - will teleport you to the docks position (base game position)
+#### `savepos <name>`
+Saves your current position under the given name.
 
-`tp 100 0 100` - will teleport you to the position with coordinates (100, 0, 100)
+**Example**
 
-`tp 100 100` - will teleport you to the ground position with coordinates (100, 100)
+```text
+savepos home
+savepos dealer
+savepos warehouse
+```
 
-- `timewarp` command - allows you to temporarily speed up the game time, useful for testing things that take a long time to happen
+#### `tp <destination>`
+Teleports you to a saved position, a built-in game location, or a set of coordinates.
 
-timewarp is also exposed via keybinds, letting you easily control time speed (configurable via MelonPreferences)
+**Examples**
 
-- `forcecarteldeal` command - Forces a new cartel deal, removing existing one
-- `setcartelinfluence` command - Sets the cartel influence in specified region to a specified value.
-    `setcartelinfluence docks 1` - sets the cartel influence in the docks region to 1 (100%)
+```text
+tp home
+tp docks
+tp 100 100
+tp 100 0 100
+```
 
-- `forcedeal` command - Forces a new deal with specified customer, e.g. `forcedeal kyle_cooley`
-- `copyhand` and `pastehand` - Copy held item with all properties (like quality, quantity, packaging etc.) and paste it back in
+- `tp <saved_position>` - Teleport to a saved position.
+- `tp <location>` - Teleport to a built-in location (e.g. `docks`).
+- `tp <x> <z>` - Teleport to ground level at the specified coordinates.
+- `tp <x> <y> <z>` - Teleport to the exact coordinates.
 
-- In-game help for added commands (accessed by commands button, below console switch)
-- Disclaimer screen skip - faster game startup
-- Hold-to-load - hold the number key button to load the game in that slot
+---
 
-ex. holding `1` will load the game in slot 1, holding `2` will load the game in slot 2, etc. You need to hold the button for 0.5 seconds. This feature only works the in menu.
+### World
 
-- Command history - executed commands will be saved in `UserData/ScheduleToolbox/history.log` and can be accessed using up/down arrow keys in console
-- Command autocomplete - start typing a command and press tab to autocomplete it. Can also be used to cycle through available commands if multiple match the typed prefix.
-- Keybind persistence - `bind` a command to a key like usual, the binding will be saved and loaded on load. `unbind` a key to remove the saved binding or `clearbinds` to remove all saved bindings.
+#### `timewarp`
+Temporarily speeds up game time.
+
+> **Note**
+> Timewarp can also be controlled using configurable keybinds (via MelonPreferences).
+
+#### `forcecarteldeal`
+Removes the current cartel deal and generates a new one.
+
+#### `setcartelinfluence <region> <value>`
+Sets cartel influence for the specified region.
+
+**Example**
+
+```text
+setcartelinfluence docks 1
+```
+
+#### `forcedeal <customer>`
+Forces a new deal with the specified customer.
+
+**Example**
+
+```text
+forcedeal kyle_cooley
+```
+
+---
+
+### Items
+
+#### `copyhand`
+Copies the currently held item, including all of its properties (quality, quantity, packaging, etc.).
+
+#### `pastehand`
+Restores the previously copied item.
+
+#### `listitems`
+Lists every storable item in the game.
+
+#### `listnpcs`
+Lists every NPC in the game.
+
+---
+
+## QoL Features
+
+### Disclaimer skip
+Skips the disclaimer screen for faster startup.
+
+### Hold-to-load saves
+Hold a number key for **0.5 seconds** while in the main menu to load the corresponding save slot.
+
+**Examples**
+
+- Hold `1` → Load save slot 1
+- Hold `2` → Load save slot 2
+- Hold `3` → Load save slot 3
+
+> **Note**
+> This feature only works in the main menu.
+
+### Command history
+Executed commands are saved to:
+
+```text
+UserData/ScheduleToolbox/history.log
+```
+
+Use the **↑** and **↓** arrow keys in the console to navigate command history.
+
+### Command autocomplete
+Press **Tab** to autocomplete commands.
+
+If multiple commands match the current input, pressing **Tab** repeatedly cycles through them.
+
+### Persistent keybinds
+Keybinds created with `bind` are automatically saved and restored on startup.
+
+- `unbind` removes a saved keybind.
+- `clearbinds` removes all saved keybinds.
+
+---
 
 ## Credits
-- [HazDS](https://github.com/HazDS) for contributing timewarp keybind and GUI feature
+
+- [HazDS](https://github.com/HazDS) - Timewarp keybinds and GUI contributions.
