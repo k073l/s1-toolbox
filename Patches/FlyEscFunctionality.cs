@@ -2,9 +2,11 @@
 using ScheduleToolbox.Commands;
 
 #if MONO
+using ScheduleOne;
 using ScheduleOne.PlayerScripts;
 using ScheduleOne.DevUtilities;
 #else
+using Il2CppScheduleOne;
 using Il2CppScheduleOne.DevUtilities;
 using Il2CppScheduleOne.PlayerScripts;
 #endif
@@ -17,7 +19,7 @@ public class FlyEscFunctionality
     static bool Prefix(PlayerCamera __instance, ExitAction action)
     {
         if (action.Used) return true;
-        if (!__instance.FreeCamEnabled || action.exitType != ExitType.Escape) return true;
+        if (!__instance.FreeCamEnabled || action.Type != ExitType.Primary) return true;
         action.Used = true;
         FlyCommand.TeleportToCameraPos();
         __instance.SetFreeCam(enable: false);
